@@ -230,7 +230,7 @@
       <p>Public profile metrics, fetched from the platforms themselves.</p>
     </div>
     <button class="refresh-button" onclick={refreshAll} disabled={refreshing}>
-      <RefreshCw size={14} class:spinning={refreshing} /> {refreshing ? 'SYNCING' : 'SYNC DATA'}
+      <RefreshCw size={14} class={refreshing ? "spinning" : ""} /> {refreshing ? 'SYNCING' : 'SYNC DATA'}
     </button>
   </div>
 
