@@ -1,50 +1,10 @@
 <script lang="ts">
-  import { ArrowDown, ArrowUpRight, Terminal, Github, Linkedin, Mail, Code2, Cpu, Globe, ExternalLink, GraduationCap, GitBranch, Menu, X, Sparkles, Braces, Database, Layers3 } from 'lucide-svelte';
+  import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail, Code2, Cpu, Globe, ExternalLink, GraduationCap, GitBranch, Menu, X, Sparkles, Braces, Database, Layers3 } from 'lucide-svelte';
   import StatsDashboard from '../lib/StatsDashboard.svelte';
+  import DeveloperCommandCentre from '../lib/DeveloperCommandCentre.svelte';
+  import ProjectShowcase from '../lib/ProjectShowcase.svelte';
 
   let menuOpen = $state(false);
-  let command = $state('');
-  let terminalOutput = $state('Welcome to AYUSH OS. Type `help` to explore.');
-  let booted = $state(false);
-
-  const projects = [
-    {
-      name: 'Hostel Allotment System',
-      type: 'WEB APPLICATION',
-      status: 'BUILDING',
-      description: 'A room-allocation workflow with capacity checks, waitlists, spreadsheet import/export and a live preview.',
-      stack: ['SvelteKit', 'TypeScript', 'Tailwind', 'SheetJS'],
-      link: 'https://github.com/ayushverma9408/Hacakathon-hostel-allotment-system',
-      number: '01'
-    },
-    {
-      name: 'JEE Advanced Paper Archive',
-      type: 'EDUCATION',
-      status: 'EARLY STAGE',
-      description: 'A growing archive project focused on making past JEE Advanced papers easier to find and explore.',
-      stack: ['Web', 'Education', 'Open Source'],
-      link: 'https://github.com/ayushverma9408/JEE-ADVANCED-PAPER-ARCHIVE',
-      number: '02'
-    },
-    {
-      name: 'FloodWatch',
-      type: 'HACKATHON CONCEPT',
-      status: 'CONCEPT',
-      description: 'A proposed hardware + software flood-monitoring concept combining sensor data with a digital dashboard.',
-      stack: ['IoT', 'Dashboard', 'Data'],
-      link: 'https://github.com/ayushverma9408',
-      number: '03'
-    },
-    {
-      name: 'Competitive Programming',
-      type: 'ALGORITHM PRACTICE',
-      status: 'ONGOING',
-      description: 'A collection of problem-solving practice, algorithm implementations and contest learnings in C++.',
-      stack: ['C++', 'DSA', 'Algorithms'],
-      link: 'https://github.com/ayushverma9408/Codeforces_9408',
-      number: '04'
-    }
-  ];
 
   const skillGroups = [
     { icon: Code2, title: 'LANGUAGES', items: ['C++', 'Python', 'JavaScript', 'TypeScript', 'SQL'] },
@@ -55,19 +15,6 @@
 
   const focus = ['Strengthening DSA & algorithmic thinking', 'Building useful web applications', 'Exploring AI, ML and systems'];
 
-  function runCommand() {
-    const value = command.trim().toLowerCase();
-    const responses: Record<string, string> = {
-      help: 'Available commands: about · projects · skills · contact · clear',
-      about: 'CSE undergrad at NIT Silchar. I enjoy algorithms, building for the web and learning by shipping.',
-      projects: '4 project tracks loaded. Scroll to PROJECT ARCHIVE to inspect them.',
-      skills: 'C++ / Python / TypeScript / SvelteKit / DSA / Web Development / ML exploration.',
-      contact: 'Email: ayushverma19341@gmail.com · GitHub: @ayushverma9408',
-      clear: ''
-    };
-    terminalOutput = responses[value] ?? `Command not found: ${value}. Type "help" for available commands.`;
-    command = '';
-  }
 </script>
 
 <svelte:head>
@@ -155,23 +102,7 @@
       </div>
     </section>
 
-    <section class="section-wrap projects-section" id="projects">
-      <div class="section-heading"><span class="section-index">03 //</span><h2>PROJECT <span>ARCHIVE</span></h2><span class="heading-rule"></span><span class="section-tag">SELECTED.WORKS</span></div>
-      <div class="section-intro"><p>A few things I've worked on, explored, or am actively developing.</p><span>04 RECORDS FOUND</span></div>
-      <div class="projects-grid">
-        {#each projects as project}
-          <article class="project-card">
-            <div class="project-top"><span>PROJECT_{project.number}</span><span class="project-status"><i></i>{project.status}</span></div>
-            <div class="project-icon">{#if project.number === '01'}<Layers3 size={23}/>{:else if project.number === '02'}<GraduationCap size={23}/>{:else if project.number === '03'}<Cpu size={23}/>{:else}<GitBranch size={23}/>{/if}</div>
-            <p class="project-type">{project.type}</p>
-            <h3>{project.name}</h3>
-            <p class="project-description">{project.description}</p>
-            <div class="stack-list">{#each project.stack as item}<span>{item}</span>{/each}</div>
-            <a class="project-link" href={project.link} target="_blank" rel="noreferrer">VIEW PROJECT <ArrowUpRight size={15}/></a>
-          </article>
-        {/each}
-      </div>
-    </section>
+    <ProjectShowcase />
 
     <section class="section-wrap skills-section" id="skills">
       <div class="section-heading"><span class="section-index">04 //</span><h2>SKILL <span>MATRIX</span></h2><span class="heading-rule"></span><span class="section-tag">TECH.STACK</span></div>
@@ -183,23 +114,7 @@
       </div>
     </section>
 
-    <section class="section-wrap terminal-section">
-      <div class="section-heading"><span class="section-index">05 //</span><h2>INTERACTIVE <span>TERMINAL</span></h2><span class="heading-rule"></span><span class="section-tag">SHELL.ACCESS</span></div>
-      <div class="terminal-window">
-        <div class="terminal-title"><div class="window-dots"><i></i><i></i><i></i></div><span>guest@ayush-os — interactive shell</span><span class="terminal-lock">READ ONLY</span></div>
-        <div class="terminal-content">
-          <p class="terminal-welcome">AYUSH OS interactive shell · Type <b>help</b> to see available commands.</p>
-          <p class="terminal-prompt"><span>guest@ayush-os</span>:~$ <span>{command || ' '}</span></p>
-          <p class="terminal-response">{terminalOutput}</p>
-          <form class="terminal-form" onsubmit={(e) => { e.preventDefault(); runCommand(); }}>
-            <span>guest@ayush-os:~$</span>
-            <input aria-label="Terminal command" bind:value={command} placeholder="type a command..." autocomplete="off" />
-            <button type="submit" aria-label="Run command"><ArrowUpRight size={16}/></button>
-          </form>
-        </div>
-      </div>
-      <p class="terminal-hint"><span class="meta-dot"></span> SAFE SANDBOX · Commands only navigate this portfolio. No system commands are executed.</p>
-    </section>
+    <DeveloperCommandCentre />
 
     <section class="section-wrap coding-section">
       <div class="section-heading"><span class="section-index">06 //</span><h2>CODING <span>PROFILES</span></h2><span class="heading-rule"></span><span class="section-tag">PLAYER.STATS</span></div>
