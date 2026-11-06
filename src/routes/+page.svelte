@@ -1,10 +1,19 @@
 <script lang="ts">
-  import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail, Code2, Cpu, Globe, ExternalLink, GraduationCap, GitBranch, Menu, X, Sparkles, Braces, Database, Layers3 } from 'lucide-svelte';
+  import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail, Code2, Cpu, Globe, ExternalLink, GraduationCap, GitBranch, Menu, X, Sparkles, Braces, Database, Layers3, Home, UserRound, FolderGit2, FileText } from 'lucide-svelte';
   import StatsDashboard from '../lib/StatsDashboard.svelte';
   import DeveloperCommandCentre from '../lib/DeveloperCommandCentre.svelte';
   import ProjectShowcase from '../lib/ProjectShowcase.svelte';
 
   let menuOpen = $state(false);
+  let resumeOpen = $state(false);
+  let pointerX = $state(-1000);
+  let pointerY = $state(-1000);
+
+  function handlePointerMove(event: PointerEvent) {
+    if (event.pointerType !== 'mouse') return;
+    pointerX = event.clientX;
+    pointerY = event.clientY;
+  }
 
   const skillGroups = [
     { icon: Code2, title: 'LANGUAGES', items: ['C++', 'Python', 'JavaScript', 'TypeScript', 'SQL'] },
@@ -24,8 +33,43 @@
   <meta property="og:description" content="Developer portfolio · NIT Silchar CSE" />
 </svelte:head>
 
-<div class="site-shell">
+<svelte:window onpointermove={handlePointerMove} />
+<div class="site-shell" style={`--pointer-x: ${pointerX}px; --pointer-y: ${pointerY}px`}>
   <div class="scanlines"></div>
+  <div class="cursor-aura" aria-hidden="true"></div>
+  <aside class="side-dock" aria-label="Quick navigation">
+    <span class="dock-caption">QUICK ACCESS</span>
+    <a href="#home" aria-label="Home" title="Home"><Home size={17}/></a>
+    <a href="#about" aria-label="About" title="About"><UserRound size={17}/></a>
+    <a href="#projects" aria-label="Projects" title="Projects"><FolderGit2 size={17}/></a>
+    <a href="#skills" aria-label="Skills" title="Skills"><Code2 size={17}/></a>
+    <a href="#connect" aria-label="Contact" title="Contact"><Mail size={17}/></a>
+    <span class="dock-divider"></span>
+    <button class="dock-resume" onclick={() => resumeOpen = true} aria-label="View resume" title="View resume"><FileText size={17}/><span>RESUME</span></button>
+  </aside>
+  {#if resumeOpen}
+    <div class="resume-backdrop" role="presentation" onclick={() => resumeOpen = false}>
+      <section class="resume-panel" role="dialog" aria-modal="true" aria-labelledby="resume-title" onclick={(event) => event.stopPropagation()}>
+        <div class="resume-panel-head"><span>PROFILE.DOC // PREVIEW</span><button class="resume-close" aria-label="Close resume preview" onclick={() => resumeOpen = false}><X size={19}/></button></div>
+        <div class="resume-content">
+          <p class="resume-eyebrow">COMPUTER SCIENCE UNDERGRADUATE</p>
+          <h2 id="resume-title">Ayush Verma<span>.</span></h2>
+          <p class="resume-subtitle">B.Tech Computer Science & Engineering · NIT Silchar · Class of 2029</p>
+          <div class="resume-rule"></div>
+          <h3>PROFILE</h3>
+          <p>Computer Science undergraduate interested in algorithms, problem solving, and building useful web applications. Currently strengthening core CS fundamentals while exploring modern web technologies and AI/ML.</p>
+          <h3>TECHNICAL TOOLKIT</h3>
+          <div class="resume-tags"><span>C++</span><span>Python</span><span>JavaScript</span><span>TypeScript</span><span>SQL</span><span>SvelteKit</span><span>HTML / CSS</span><span>Data Structures & Algorithms</span></div>
+          <h3>SELECTED WORK</h3>
+          <div class="resume-work"><strong>AYUSH OS</strong><span>Developer portfolio with interactive terminal, project showcase and coding-stat dashboard.</span><a href="https://github.com/ayushverma9408/ayush-os" target="_blank" rel="noreferrer">SOURCE CODE <ArrowUpRight size={13}/></a></div>
+          <div class="resume-work"><strong>JEE Advanced Paper Archive</strong><span>Searchable archive interface for organizing past examination papers.</span><a href="https://github.com/ayushverma9408/JEE-ADVANCED-PAPER-ARCHIVE" target="_blank" rel="noreferrer">SOURCE CODE <ArrowUpRight size={13}/></a></div>
+          <div class="resume-rule"></div>
+          <a class="button-primary resume-contact" href="mailto:ayushverma19341@gmail.com?subject=Resume%20request"><Mail size={15}/> REQUEST FULL RESUME</a>
+          <p class="resume-footnote">This is a live profile preview. A downloadable resume PDF has not been added yet.</p>
+        </div>
+      </section>
+    </div>
+  {/if}
   <header class="topbar">
     <a class="brand" href="#home" aria-label="Ayush OS home"><span class="brand-mark">A<span>.</span></span><span>AYUSH<span class="muted">_OS</span></span></a>
     <nav class:open={menuOpen}>
@@ -173,6 +217,43 @@
   .coding-section{padding-top:105px}.coding-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.coding-card{display:flex;align-items:center;gap:14px;padding:18px;border:1px solid #253943;background:#0a131b;text-decoration:none;color:#e8edf5;transition:.2s}.coding-card:hover{border-color:#00a982;transform:translateY(-2px)}.coding-icon{width:42px;height:42px;display:grid;place-items:center;background:#241e13;color:#f0b84a;font:800 13px monospace;flex-shrink:0}.coding-icon.cf{background:#14222c;color:#70bfff}.coding-icon.cc{background:#211c28;color:#bd9bff}.coding-label{font-size:8px;color:#6e818d}.coding-card h3{font-size:14px;margin:4px 0}.coding-card p{font-size:10px;color:#758792;margin:0}.coding-card>svg{margin-left:auto;color:#00e6a8;flex-shrink:0}
   .connect-section{padding-top:110px;padding-bottom:90px}.connect-panel{position:relative;overflow:hidden;border:1px solid #245144;background:radial-gradient(ellipse at 80% 50%,#073126 0%,#0a171c 50%,#091119 100%);padding:55px 60px}.connect-orbit{position:absolute;border:1px solid #00e6a81b;border-radius:50%;width:390px;height:390px;right:-60px;top:-100px}.orbit-two{width:270px;height:270px;right:0;top:-40px}.connect-panel>*:not(.connect-orbit){position:relative;z-index:1}.connect-panel h2{font-size:clamp(43px,7vw,76px);letter-spacing:-3px;line-height:.95;margin:25px 0}.connect-panel h2 span{color:#00e6a8}.connect-panel>p{font-size:13px;line-height:1.8;color:#93a4ad;max-width:480px;margin-bottom:25px}
   .footer{min-height:85px;border-top:1px solid #1b2b34;display:flex;align-items:center;justify-content:space-between;gap:18px}.footer>p,.copyright{color:#63747e;font-size:8px}.footer>a:not(.brand){display:flex;align-items:center;gap:5px;color:#00e6a8;text-decoration:none;font-size:9px}
+
+  .cursor-aura{position:fixed;inset:0;z-index:4;pointer-events:none;background:radial-gradient(360px circle at var(--pointer-x) var(--pointer-y),rgba(0,230,168,.075),transparent 68%);transition:background .06s linear}
+  .side-dock{position:fixed;z-index:30;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 8px;border:1px solid #29413f;background:rgba(7,15,20,.88);backdrop-filter:blur(16px);box-shadow:0 12px 45px #0008;border-radius:5px}
+  .dock-caption{writing-mode:vertical-rl;transform:rotate(180deg);font:7px monospace;letter-spacing:1.5px;color:#617b83;margin:2px 0 7px}
+  .side-dock>a,.dock-resume{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#82949e;text-decoration:none;border:1px solid transparent;background:transparent;border-radius:3px;transition:color .2s,border-color .2s,background .2s,transform .2s;cursor:pointer}
+  .side-dock>a:hover,.dock-resume:hover{color:#00e6a8;border-color:#286b58;background:#06251d;transform:translateY(-2px);box-shadow:0 0 18px #00e6a81a}
+  .dock-divider{height:1px;width:22px;background:#29413f;margin:3px 0}
+  .dock-resume{height:auto;min-height:65px;flex-direction:column;gap:6px;color:#00e6a8;border-color:#245446;padding:8px 3px}
+  .dock-resume span{font:7px monospace;letter-spacing:.8px;writing-mode:vertical-rl}
+  .resume-backdrop{position:fixed;inset:0;z-index:60;background:rgba(1,5,8,.78);backdrop-filter:blur(8px);display:flex;justify-content:flex-end}
+  .resume-panel{width:min(480px,100%);height:100%;overflow-y:auto;background:#09131b;border-left:1px solid #285345;box-shadow:-25px 0 80px #0009;animation:resume-in .24s ease-out}
+  @keyframes resume-in{from{transform:translateX(35px);opacity:.5}to{transform:translateX(0);opacity:1}}
+  .resume-panel-head{height:58px;position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:0 25px;background:rgba(9,19,27,.96);border-bottom:1px solid #203a3d;color:#00dba4;font:9px monospace;letter-spacing:1.3px}
+  .resume-close{display:grid;place-items:center;background:transparent;border:1px solid #2a4148;color:#a6b5bd;width:32px;height:32px;cursor:pointer}
+  .resume-close:hover{color:#00e6a8;border-color:#00e6a8}
+  .resume-content{padding:36px 34px 45px}
+  .resume-eyebrow{font:9px monospace;letter-spacing:1.4px;color:#00dba4}
+  .resume-content h2{font-size:39px;letter-spacing:-1.7px;margin:12px 0 7px;color:#edf5f7}
+  .resume-content h2 span{color:#00e6a8}
+  .resume-subtitle{font-size:11px;line-height:1.7;color:#8da0aa}
+  .resume-rule{height:1px;background:#29413f;margin:25px 0}
+  .resume-content h3{font:10px monospace;letter-spacing:1.4px;color:#00dba4;margin:25px 0 12px}
+  .resume-content>p:not(.resume-eyebrow):not(.resume-subtitle):not(.resume-footnote){font-size:12px;line-height:1.8;color:#9aabb4}
+  .resume-tags{display:flex;gap:7px;flex-wrap:wrap}
+  .resume-tags span{font:9px monospace;color:#c1d0d5;border:1px solid #29413f;padding:7px 9px}
+  .resume-work{display:grid;gap:7px;padding:12px 0;border-bottom:1px solid #1d3038}
+  .resume-work strong{font-size:12px;color:#e3edf0}
+  .resume-work span{font-size:11px;line-height:1.6;color:#82959f}
+  .resume-work a{display:flex;align-items:center;gap:5px;width:max-content;color:#00dba4;text-decoration:none;font:8px monospace;letter-spacing:1px;margin-top:3px}
+  .resume-contact{width:max-content}
+  .resume-footnote{font-size:9px;line-height:1.6;color:#657984;margin-top:16px}
+  .project-card,.skill-card,.coding-card,.focus-card,.button-primary,.button-ghost{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease}
+  .skill-card:hover{transform:translateY(-4px);border-color:#32866d;box-shadow:0 12px 30px #0005}
+  .focus-card:hover{background:#0b1c20;color:#e8fff8}
+  @media(max-width:650px){.side-dock{top:auto;right:50%;bottom:12px;transform:translateX(50%);flex-direction:row;padding:7px 9px;gap:4px;border-radius:6px}.dock-caption{writing-mode:initial;transform:none;margin:0 5px 0 2px;font-size:6px}.side-dock>a{width:32px;height:32px}.dock-divider{height:20px;width:1px;margin:0 3px}.dock-resume{min-height:38px;height:38px;width:43px;flex-direction:row;gap:3px;padding:3px}.dock-resume span{writing-mode:initial;font-size:6px}.cursor-aura{display:none}.resume-content{padding:28px 23px 38px}.resume-content h2{font-size:34px}}
+  @media(prefers-reduced-motion:reduce){.resume-panel{animation:none}.cursor-aura{display:none}*{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
   @media(max-width:850px){.hero{gap:30px;grid-template-columns:1fr 1fr}.hero h1{font-size:75px}.role-line{font-size:8px}.about-grid{gap:30px}.skills-grid{grid-template-columns:repeat(2,1fr)}.top-right{display:none}}
   @media(max-width:650px){.section-wrap{width:calc(100% - 36px)}.topbar{height:64px;padding:0 18px}.menu-toggle{display:block;cursor:pointer}nav{display:none;position:absolute;top:63px;left:0;right:0;padding:22px;background:#091119;border-bottom:1px solid #263a43;flex-direction:column;gap:22px}nav.open{display:flex}.hero{display:flex;flex-direction:column;align-items:stretch;gap:38px;padding-top:75px;padding-bottom:85px;min-height:0}.hero h1{font-size:clamp(67px,17vw,100px);letter-spacing:-5px}.hero-kicker{margin-top:34px}.role-line{font-size:8px;line-height:1.9}.hero-meta{font-size:8px;gap:13px;flex-wrap:wrap}.hero-console{max-width:100%}.console-body{min-height:320px}.scroll-cue{bottom:25px}.section-heading{gap:9px}.section-heading h2{font-size:17px}.section-tag{display:none}.about-section,.focus-section,.projects-section,.skills-section,.terminal-section,.coding-section{padding-top:70px}.about-grid{grid-template-columns:1fr;gap:30px}.about-main h3{font-size:38px}.focus-grid{grid-template-columns:1fr}.focus-card{border-right:0;border-bottom:1px solid #243741}.focus-card:last-child{border-bottom:0}.projects-grid{grid-template-columns:1fr}.project-description{min-height:0}.skills-grid{grid-template-columns:1fr 1fr;gap:8px}.skill-card{padding:15px 12px;min-height:185px}.coding-grid{grid-template-columns:1fr}.connect-section{padding-top:75px;padding-bottom:60px}.connect-panel{padding:35px 23px}.connect-panel h2{font-size:48px;letter-spacing:-2px}.footer{padding:22px 0;flex-wrap:wrap}.footer>p{order:3;width:100%;margin:0}.copyright{font-size:7px}.section-intro{align-items:flex-start;gap:12px}.section-intro span{white-space:nowrap;font-size:8px}.terminal-content{padding:18px 14px}.terminal-form>span{font-size:9px}}
   @media(max-width:380px){.skills-grid{grid-template-columns:1fr}.hero-actions{flex-direction:column;align-items:stretch}.button-primary,.button-ghost{width:100%}.section-heading h2{font-size:15px}}
