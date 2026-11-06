@@ -8,6 +8,7 @@
   let resumeOpen = $state(false);
   let pointerX = $state(-1000);
   let pointerY = $state(-1000);
+  let cursorPressed = $state(false);
 
   function handlePointerMove(event: PointerEvent) {
     if (event.pointerType !== 'mouse') return;
@@ -33,10 +34,11 @@
   <meta property="og:description" content="Developer portfolio · NIT Silchar CSE" />
 </svelte:head>
 
-<svelte:window onpointermove={handlePointerMove} />
+<svelte:window onpointermove={handlePointerMove} onpointerdown={() => cursorPressed = true} onpointerup={() => cursorPressed = false} onblur={() => cursorPressed = false} />
 <div class="site-shell" style={`--pointer-x: ${pointerX}px; --pointer-y: ${pointerY}px`}>
   <div class="scanlines"></div>
   <div class="cursor-aura" aria-hidden="true"></div>
+  <div class:pressed={cursorPressed} class="cursor-reticle" aria-hidden="true"><span class="reticle-ring"></span><span class="reticle-core"></span><span class="reticle-cross reticle-cross-x"></span><span class="reticle-cross reticle-cross-y"></span><span class="reticle-satellite"></span><span class="reticle-label">TRACKING</span></div>
   <aside class="side-dock" aria-label="Quick navigation">
     <span class="dock-caption">QUICK ACCESS</span>
     <a href="#home" aria-label="Home" title="Home"><Home size={17}/></a>
@@ -218,7 +220,18 @@
   .connect-section{padding-top:110px;padding-bottom:90px}.connect-panel{position:relative;overflow:hidden;border:1px solid #245144;background:radial-gradient(ellipse at 80% 50%,#073126 0%,#0a171c 50%,#091119 100%);padding:55px 60px}.connect-orbit{position:absolute;border:1px solid #00e6a81b;border-radius:50%;width:390px;height:390px;right:-60px;top:-100px}.orbit-two{width:270px;height:270px;right:0;top:-40px}.connect-panel>*:not(.connect-orbit){position:relative;z-index:1}.connect-panel h2{font-size:clamp(43px,7vw,76px);letter-spacing:-3px;line-height:.95;margin:25px 0}.connect-panel h2 span{color:#00e6a8}.connect-panel>p{font-size:13px;line-height:1.8;color:#93a4ad;max-width:480px;margin-bottom:25px}
   .footer{min-height:85px;border-top:1px solid #1b2b34;display:flex;align-items:center;justify-content:space-between;gap:18px}.footer>p,.copyright{color:#63747e;font-size:8px}.footer>a:not(.brand){display:flex;align-items:center;gap:5px;color:#00e6a8;text-decoration:none;font-size:9px}
 
-  .cursor-aura{position:fixed;inset:0;z-index:4;pointer-events:none;background:radial-gradient(360px circle at var(--pointer-x) var(--pointer-y),rgba(0,230,168,.075),transparent 68%);transition:background .06s linear}
+  .cursor-aura{position:fixed;inset:0;z-index:4;pointer-events:none;background:radial-gradient(300px circle at var(--pointer-x) var(--pointer-y),rgba(0,230,168,.12),transparent 70%);transition:background .04s linear}
+  .cursor-reticle{position:fixed;z-index:25;left:0;top:0;width:1px;height:1px;pointer-events:none;transform:translate3d(var(--pointer-x),var(--pointer-y),0);filter:drop-shadow(0 0 7px #00e6a8aa)}
+  .reticle-ring{position:absolute;width:34px;height:34px;left:0;top:0;transform:translate(-50%,-50%);border:1px solid rgba(0,230,168,.9);border-radius:50%;box-shadow:inset 0 0 12px #00e6a81c,0 0 15px #00e6a833;transition:width .18s ease,height .18s ease,border-color .18s ease}
+  .reticle-ring:before,.reticle-ring:after{content:"";position:absolute;background:#00e6a8;box-shadow:0 0 8px #00e6a8}
+  .reticle-ring:before{width:5px;height:1px;left:-3px;top:50%}.reticle-ring:after{width:1px;height:5px;top:-3px;left:50%}
+  .reticle-core{position:absolute;width:4px;height:4px;left:0;top:0;transform:translate(-50%,-50%);background:#c5fff0;border-radius:50%;box-shadow:0 0 6px 2px #00e6a8,0 0 18px 5px #00e6a855}
+  .reticle-cross{position:absolute;opacity:.7}.reticle-cross-x{width:58px;height:1px;left:0;top:0;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,#00e6a8,transparent)}.reticle-cross-y{height:58px;width:1px;left:0;top:0;transform:translate(-50%,-50%);background:linear-gradient(180deg,transparent,#00e6a8,transparent)}
+  .reticle-satellite{position:absolute;width:5px;height:5px;left:17px;top:-17px;border:1px solid #b7ffed;border-radius:1px;box-shadow:0 0 9px #00e6a8;animation:satellite-orbit 3s linear infinite}
+  .reticle-label{position:absolute;left:25px;top:20px;color:#00e6a8;font:7px monospace;letter-spacing:1.5px;text-shadow:0 0 8px #00e6a8;white-space:nowrap;opacity:.8}
+  .cursor-reticle.pressed .reticle-ring{width:23px;height:23px;border-color:#e2fff7;box-shadow:0 0 24px #00e6a8aa,inset 0 0 12px #00e6a855}
+  .cursor-reticle.pressed .reticle-satellite{animation-duration:.5s}
+  @keyframes satellite-orbit{from{transform:rotate(0deg) translateX(22px) rotate(0deg)}to{transform:rotate(360deg) translateX(22px) rotate(-360deg)}}
   .side-dock{position:fixed;z-index:30;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 8px;border:1px solid #29413f;background:rgba(7,15,20,.88);backdrop-filter:blur(16px);box-shadow:0 12px 45px #0008;border-radius:5px}
   .dock-caption{writing-mode:vertical-rl;transform:rotate(180deg);font:7px monospace;letter-spacing:1.5px;color:#617b83;margin:2px 0 7px}
   .side-dock>a,.dock-resume{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#82949e;text-decoration:none;border:1px solid transparent;background:transparent;border-radius:3px;transition:color .2s,border-color .2s,background .2s,transform .2s;cursor:pointer}
@@ -251,8 +264,8 @@
   .project-card,.skill-card,.coding-card,.focus-card,.button-primary,.button-ghost{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease}
   .skill-card:hover{transform:translateY(-4px);border-color:#32866d;box-shadow:0 12px 30px #0005}
   .focus-card:hover{background:#0b1c20;color:#e8fff8}
-  @media(max-width:650px){.side-dock{top:auto;right:50%;bottom:12px;transform:translateX(50%);flex-direction:row;padding:7px 9px;gap:4px;border-radius:6px}.dock-caption{writing-mode:initial;transform:none;margin:0 5px 0 2px;font-size:6px}.side-dock>a{width:32px;height:32px}.dock-divider{height:20px;width:1px;margin:0 3px}.dock-resume{min-height:38px;height:38px;width:43px;flex-direction:row;gap:3px;padding:3px}.dock-resume span{writing-mode:initial;font-size:6px}.cursor-aura{display:none}.resume-content{padding:28px 23px 38px}.resume-content h2{font-size:34px}}
-  @media(prefers-reduced-motion:reduce){.resume-panel{animation:none}.cursor-aura{display:none}*{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+  @media(max-width:650px){.side-dock{top:auto;right:50%;bottom:12px;transform:translateX(50%);flex-direction:row;padding:7px 9px;gap:4px;border-radius:6px}.dock-caption{writing-mode:initial;transform:none;margin:0 5px 0 2px;font-size:6px}.side-dock>a{width:32px;height:32px}.dock-divider{height:20px;width:1px;margin:0 3px}.dock-resume{min-height:38px;height:38px;width:43px;flex-direction:row;gap:3px;padding:3px}.dock-resume span{writing-mode:initial;font-size:6px}.cursor-aura,.cursor-reticle{display:none}.resume-content{padding:28px 23px 38px}.resume-content h2{font-size:34px}}
+  @media(prefers-reduced-motion:reduce){.resume-panel{animation:none}.cursor-aura,.cursor-reticle{display:none}*{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 
   @media(max-width:850px){.hero{gap:30px;grid-template-columns:1fr 1fr}.hero h1{font-size:75px}.role-line{font-size:8px}.about-grid{gap:30px}.skills-grid{grid-template-columns:repeat(2,1fr)}.top-right{display:none}}
   @media(max-width:650px){.section-wrap{width:calc(100% - 36px)}.topbar{height:64px;padding:0 18px}.menu-toggle{display:block;cursor:pointer}nav{display:none;position:absolute;top:63px;left:0;right:0;padding:22px;background:#091119;border-bottom:1px solid #263a43;flex-direction:column;gap:22px}nav.open{display:flex}.hero{display:flex;flex-direction:column;align-items:stretch;gap:38px;padding-top:75px;padding-bottom:85px;min-height:0}.hero h1{font-size:clamp(67px,17vw,100px);letter-spacing:-5px}.hero-kicker{margin-top:34px}.role-line{font-size:8px;line-height:1.9}.hero-meta{font-size:8px;gap:13px;flex-wrap:wrap}.hero-console{max-width:100%}.console-body{min-height:320px}.scroll-cue{bottom:25px}.section-heading{gap:9px}.section-heading h2{font-size:17px}.section-tag{display:none}.about-section,.focus-section,.projects-section,.skills-section,.terminal-section,.coding-section{padding-top:70px}.about-grid{grid-template-columns:1fr;gap:30px}.about-main h3{font-size:38px}.focus-grid{grid-template-columns:1fr}.focus-card{border-right:0;border-bottom:1px solid #243741}.focus-card:last-child{border-bottom:0}.projects-grid{grid-template-columns:1fr}.project-description{min-height:0}.skills-grid{grid-template-columns:1fr 1fr;gap:8px}.skill-card{padding:15px 12px;min-height:185px}.coding-grid{grid-template-columns:1fr}.connect-section{padding-top:75px;padding-bottom:60px}.connect-panel{padding:35px 23px}.connect-panel h2{font-size:48px;letter-spacing:-2px}.footer{padding:22px 0;flex-wrap:wrap}.footer>p{order:3;width:100%;margin:0}.copyright{font-size:7px}.section-intro{align-items:flex-start;gap:12px}.section-intro span{white-space:nowrap;font-size:8px}.terminal-content{padding:18px 14px}.terminal-form>span{font-size:9px}}
