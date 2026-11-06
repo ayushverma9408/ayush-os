@@ -18,6 +18,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Sync SvelteKit configuration
+        run: npx svelte-kit sync
       - name: Check Svelte and TypeScript
         run: npm run check
       - name: Build
