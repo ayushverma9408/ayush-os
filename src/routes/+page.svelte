@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ArrowDown, ArrowUpRight, Terminal, Github, Linkedin, Mail, Code2, Cpu, Globe, ExternalLink, GraduationCap, GitBranch, Menu, X, Sparkles, Braces, Database, Layers3 } from 'lucide-svelte';
+  import StatsDashboard from '../lib/StatsDashboard.svelte';
 
   let menuOpen = $state(false);
   let command = $state('');
@@ -207,6 +208,11 @@
         <a class="coding-card" href="https://codeforces.com/profile/ayushverma9408" target="_blank" rel="noreferrer"><div class="coding-icon cf">CF</div><div><span class="coding-label">CONTEST ARENA</span><h3>Codeforces</h3><p>Algorithms · Contests · C++</p></div><ExternalLink size={17}/></a>
         <a class="coding-card" href="https://www.codechef.com/users/ayushverma9408" target="_blank" rel="noreferrer"><div class="coding-icon cc">CC</div><div><span class="coding-label">COMPETITIVE CODING</span><h3>CodeChef</h3><p>Problem solving · Contests</p></div><ExternalLink size={17}/></a>
       </div>
+    </section>
+
+    <section class="section-wrap live-stats-section" id="live-stats">
+      <div class="section-heading"><span class="section-index">07 //</span><h2>LIVE <span>STATISTICS</span></h2><span class="heading-rule"></span><span class="section-tag">PLATFORM.FEED</span></div>
+      <StatsDashboard />
     </section>
 
     <section class="section-wrap connect-section" id="connect">
